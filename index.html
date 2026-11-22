@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Krishnanjalii</title>
+    
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* =========================================
+           RESET & MOBILE OPTIMIZATION
+           ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            scroll-behavior: smooth; 
+            transition: background-color 0.5s;
+        }
+
+        /* =========================================
+           FLOATING BACKGROUND ELEMENTS
+           ========================================= */
+        .floating-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-item {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            opacity: 0.2;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.2; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* =========================================
+           SCENE LAYOUTS
+           ========================================= */
+        .scene {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1; 
+        }
+
+        /* Typography */
+        h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 300; }
+        h2 { font-size: 2rem; margin-bottom: 15px; }
+        p { font-size: 1.2rem; color: #aaaaaa; margin-bottom: 20px; line-height: 1.5; }
+        .highlight { color: #ff0844; font-weight: bold; }
+
+        /* =========================================
+           SCENE 1: INTRO
+           ========================================= */
+        .fade-in { opacity: 0; animation: fadeIn 2s forwards; }
+        .delay { animation-delay: 1.5s; }
+        .scroll-hint { position: absolute; bottom: 30px; font-size: 0.9rem; color: #555; animation: bounce 2s infinite; }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* =========================================
+           SCENE 2: THE BOND
+           ========================================= */
+        .orbs { position: relative; height: 150px; width: 100%; margin-bottom: 30px; }
+        .orb { width: 80px; height: 80px; border-radius: 50%; position: absolute; top: 50%; transform: translateY(-50%); filter: blur(15px); }
+        .orb.left { background: radial-gradient(circle, #4facfe 0%, #00f2fe 100%); left: 15%; animation: floatLeft 3s infinite alternate ease-in-out; }
+        .orb.right { background: radial-gradient(circle, #ff0844 0%, #ffb199 100%); right: 15%; animation: floatRight 3s infinite alternate ease-in-out; }
+
+        @keyframes floatLeft { 0% { transform: translate(0, -50%); } 100% { transform: translate(50px, -50%); } }
+        @keyframes floatRight { 0% { transform: translate(0, -50%); } 100% { transform: translate(-50px, -50%); } }
+
+        /* =========================================
+           SCENE 3: THE QUESTION & BUTTONS
+           ========================================= */
+        .button-container {
+            position: relative;
+            width: 100%;
+            height: 350px; 
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px; 
+            cursor: pointer;
+            font-weight: 900;
+            -webkit-appearance: none;
+            position: absolute; 
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        /* The Yes Button - Super Glowing Snickers Style */
+        #yes-btn {
+            background: #0033a0; 
+            color: #ffffff;
+            border: 3px solid #e31837; 
+            box-shadow: 0 0 20px #e31837, 0 0 40px #0033a0, 0 10px 0 #001f5e; 
+            z-index: 10;
+            animation: pulse 1s infinite;
+            transform: translateX(-50%) scale(1);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-style: italic; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @keyframes pulse {
+            0% { transform: translateX(-50%) scale(1); box-shadow: 0 0 20px #e31837, 0 0 40px #0033a0; }
+            50% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 40px #e31837, 0 0 80px #0033a0; }
+            100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 20px #e31837, 0 0 40px #0033a0; }
+        }
+
+        /* The No Button */
+        #no-btn {
+            background-color: #333;
+            color: #888;
+            z-index: 5;
+            transform: translateX(60%); 
+            border: 2px solid #555;
+        }
+
+        /* Shake Animation */
+        .shake { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        /* Sparkle effect */
+        .sparkle { position: fixed; pointer-events: none; font-size: 1.5rem; z-index: 9999; animation: sparkleFade 0.8s forwards; }
+        @keyframes sparkleFade { 0% { transform: scale(1) translateY(0); opacity: 1; } 100% { transform: scale(0) translateY(-50px); opacity: 0; } }
+
+        /* =========================================
+           SCENE 4: THE REVEAL & LETTER
+           ========================================= */
+        #scene-4 {
+            display: none;
+            opacity: 0;
+            transition: opacity 1.5s ease-in;
+            justify-content: flex-start; 
+            padding-top: 50px; 
+            padding-bottom: 80px;
+        }
+
+        .letter-container {
+            text-align: left;
+            max-width: 90%;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .letter-container p {
+            font-size: 1rem;
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Background -->
+    <div class="floating-bg" id="floating-bg"></div>
+
+    <!-- Scene 1: The Intro -->
+    <section class="scene" id="scene-1">
+        <h1 class="fade-in">Hey Krishnanjalii...</h1>
+        <p class="fade-in delay">I built something for you.</p>
+        <p class="scroll-hint">Scroll down 👇</p>
+    </section>
+
+    <!-- Scene 2: The Bond -->
+    <section class="scene" id="scene-2">
+        <div class="orbs">
+            <div class="orb left"></div>
+            <div class="orb right"></div>
+        </div>
+        <h2>Different paths.<br>Same soul.</h2>
+        <p>We're building our future, together.</p>
+    </section>
+
+    <!-- Scene 3: The Question -->
+    <section class="scene" id="scene-3">
+        <h2 id="question-title">So, I have a question...</h2>
+        <p>Will you be my partner in crime, forever?</p>
+        
+        <div class="button-container">
+            <button id="yes-btn">YES! 🍫</button>
+            <button id="no-btn">No</button>
+        </div>
+    </section>
+
+    <!-- Scene 4: The Reveal & Letter -->
+    <section class="scene" id="scene-4">
+        <h2>I knew it! 🥰</h2>
+        
+        <!-- The Letter -->
+        <div class="letter-container">
+            <p><strong>My Dearest Krishnanjalii,</strong></p>
+            
+            <p>Njan ithrem naal aalochichu vechathaanu ee website undakkiyathu. Just oru simple proposal alla... ithu ente future-ne pattiyulla ente oru clear vision aanu.</p> 
+            
+            <p>Nammal aadyam friends aayirunnu... pakshe eppol nammal friends ennu paranju mathiyaavilla. Nammal ee friendship-ine kadannu oru puthiya level-il ethi kazhinjirikkunnu. Oru soul-to-soul connection.</p>
+            
+            <p>Njan oru Christian, nee oru Hindu. Nammude backgrounds vere aanu. Pakshe ente manassil, athonnum oru preshnam alla. Njan ninne ethra snehikkunnuvo, athu pole thanne njan ninte beliefs-ineyum, ninte culture-ineyum full respect cheyyunnu.</p>
+            
+            <p style="color: #ffb199; font-weight: bold;">Thank you so much for understanding my situation. Enikku thonniyathokke ninne parayan scientist, . Nee enne ethra strong aakkunnu ennu ninakku ariyilla. Nee oru 'Okay alle' parayumbol, athu enikku valare valiya confidence aanu tharunnathu.</p>
+            
+            <p>Nammude relation-ine patti aalukal enthu paranjalum, namukku ariyam nammal ethra serious aanennu. Njan agrahikkunnathu ninne ente jeevithasagiyayi kaanan aanu. kurach cringe ann ennalum</p>
+            
+            <p style="color: #ffb199; font-weight: bold;">Krishnanjalii, ne ente kayii hold cheyyumbol,  Athu vellom oru kayyil pidikkal alla bro... athu enne full charge cheyyunna oru energy aanu. Ninte oru touch-il njan complete aayi melt aayi pokunnu. Nee enne ethra snehikkunnu ennu aa oro nimishavum njan anubhavikkunnu.</p>
+            
+            <p>Athukond thanne aanu njan parayunnathu, nammal ippol padikanam. Nee oru independent aayi ninte kaalukal-il nilkkanam. Ninte swapnangal sadyamakkuka. Njan ente robotics-um, coding-um vechu ninnu koode thanne undakum. Nammal orumichu valaruka. Pinne ella karyangalum nammalude family-odu parayam, avare convince cheyyam.</p>
+            
+            <p>Krishnanjalii ❤️, nee ente life-il vannathu kondu ente jeevitham maari marinjirikkunnu. Nee ente ee chodyathinu 'Yes' paranjuu, athu ente jeevithathile ettavum valiya vijayam aayirikkum.</p>
+            
+            <p style="font-size: 1.3rem; color: #ff0844; font-weight: bold; margin-top: 30px; text-align: center;">I love you so much, forever and always. ❤️</p>
+            <p style="text-align: right; margin-bottom: 0;"><strong>- orangutan/Aiden Chettan</strong></p>
+        </div>
+    </section>
+
+    <script>
+        // =========================================
+        // 1. FLOATING BACKGROUND GENERATOR
+        // =========================================
+        const bgContainer = document.getElementById('floating-bg');
+        const emojis = ['🍫', '❤️', '✨', '🚨', '🍪'];
+        
+        for(let i=0; i<25; i++) {
+            const el = document.createElement('div');
+            el.classList.add('floating-item');
+            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = (Math.random() * 4 + 4) + 's'; 
+            el.style.animationDelay = Math.random() * 3 + 's';
+            el.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+            bgContainer.appendChild(el);
+        }
+
+        // =========================================
+        // 2. SPARKLE EFFECT ON CLICK/TAP
+        // =========================================
+        document.addEventListener('touchstart', createSparkle);
+        document.addEventListener('mousedown', createSparkle);
+
+        function createSparkle(e) {
+            const x = e.touches ? e.touches[0].clientX : e.clientX;
+            const y = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            sparkle.innerText = Math.random() > 0.5 ? '✨' : '🍫';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 800);
+        }
+
+        // =========================================
+        // 3. THE "NO" BUTTON DODGER
+        // =========================================
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        const scene3 = document.getElementById('scene-3');
+        const questionTitle = document.getElementById('question-title');
+
+        const funnyTexts = [
+            "No", 
+            "Are you sure?", 
+            "You're not you when you're hungry", 
+            "Have a Snickers first 🍫", 
+            "Error 404: 'No' not found", 
+            "Catch me if you can!", 
+            "Nice try 😂", 
+            "Just click Yes already!", 
+            "Krishnanjalii pleaseee 🥺"
+        ];
+        
+        let clickCount = 0;
+
+        function moveNoButton(e) {
+            if(e.type === 'touchstart') e.preventDefault(); 
+
+            // Shake the screen
+            scene3.classList.add('shake');
+            setTimeout(() => scene3.classList.remove('shake'), 300);
+
+            // Move the button
+            const container = document.querySelector('.button-container');
+            const containerRect = container.getBoundingClientRect();
+            
+            const randomX = Math.floor(Math.random() * (containerRect.width - noBtn.offsetWidth));
+            const randomY = Math.floor(Math.random() * (containerRect.height - noBtn.offsetHeight));
+
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', moveNoButton, { passive: false });
+
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            clickCount++;
+            
+            // Change No button text
+            const randomText = funnyTexts[Math.floor(Math.random() * (funnyTexts.length - 1)) + 1];
+            noBtn.innerText = randomText;
+
+            if (clickCount > 2) {
+                noBtn.style.fontSize = "0.9rem";
+                noBtn.style.padding = "10px 20px";
+                noBtn.style.opacity = "0.7";
+            }
+
+            // Change the main text to be a bit desperate
+            if (clickCount === 2) {
+                questionTitle.innerHTML = "Are you really sure? 🥺";
+                questionTitle.style.color = "#e31837";
+            }
+
+            // Darken the background to build tension
+            document.body.style.backgroundColor = `rgba(0, 0, 0, ${0.1 * clickCount})`;
+
+            // GROW THE YES BUTTON! 
+            let currentScale = 1 + (clickCount * 0.3); 
+            if (currentScale > 3) currentScale = 3; 
+            
+            yesBtn.style.animation = 'none'; 
+            yesBtn.style.transform = `translateX(-50%) scale(${currentScale})`; 
+
+            createSparkle(e);
+            createSparkle(e);
+            createSparkle(e);
+
+            moveNoButton(e);
+        });
+
+        // =========================================
+        // 4. THE "YES" BUTTON ACTION (DIRECT JUMP TO LETTER)
+        // =========================================
+        yesBtn.addEventListener('click', () => {
+            // Reset background color
+            document.body.style.backgroundColor = '#0a0a0a';
+
+            // Massive Confetti Explosion
+            var duration = 4 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 10,
+                    angle: 60,
+                    spread: 80,
+                    origin: { x: 0 },
+                    colors: ['#0033a0', '#e31837', '#d4a373']
+                });
+                confetti({
+                    particleCount: 10,
+                    angle: 120,
+                    spread: 80,
+                    origin: { x: 1 },
+                    colors: ['#0033a0', '#e31837', '#d4a373']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Hide all previous scenes completely
+            document.getElementById('scene-1').style.display = 'none';
+            document.getElementById('scene-2').style.display = 'none';
+            document.getElementById('scene-3').style.display = 'none';
+            
+            // Show Scene 4
+            const scene4 = document.getElementById('scene-4');
+            scene4.style.display = 'flex';
+            
+            // Fade in and instantly snap to the top of the page so she sees the letter
+            setTimeout(() => {
+                scene4.style.opacity = 1;
+                window.scrollTo({ top: 0, behavior: 'instant' }); 
+            }, 50);
+        });
+    </script>
+</body>
+</html>
